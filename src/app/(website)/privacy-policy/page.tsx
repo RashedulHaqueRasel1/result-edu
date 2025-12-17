@@ -1,10 +1,9 @@
-import PrivacyPolicy from "@/components/website/PageSections/PrivacyPolicy/PrivacyPolicy";
 import React from "react";
 
 export default function page() {
   return (
     <div>
-      <PrivacyPolicy />
+      <h1>This is Privacy Policy Page</h1>
     </div>
   );
 }

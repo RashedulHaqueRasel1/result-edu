@@ -1,84 +1,95 @@
-## 🚀 Template Overview Website
+# 🎓 Education Result Portal
 
-A modern, scalable website built using **Next.js 14**, **TypeScript**, **Tailwind CSS**, **Shadcn UI**, **Lucide Icons**, **Zod**, **Axios**, **TanStack Query**, and **Sonner Toast** — with a clean architecture and modular folder structure.
+A comprehensive Education Result Portal built with **Next.js 16**, designed to provide secure result searching and robust administrative management.
 
----
+## 🚀 Features
+
+### 🔍 Public Result Search
+
+- **Secure Result Access**: Students can search for results using Board, Exam, Year, Roll, and Registration numbers.
+- **Real-time Validation**: Form validation using **Zod** ensures accurate data entry.
+- **Captcha Protection**: Integrated captcha to prevent automated spam.
+- **Privacy Focused**: Sensitive parameters are hidden using secure API proxy routes.
+- **Detailed Result View**: Displays student info, subject-wise grades, and overall GPA with a print-friendly interface.
+
+### 🛡️ Admin Dashboard
+
+- **Overview Analytics**: Visualizes platform growth, user activity, and pending moderation tasks using charts.
+- **User Management**: Full CRUD operations for platform users with role-based access control.
+- **Alumni Management**: Database for managing alumni records.
+- **Moderation Queue**: Efficient workflow for reviewing and approving pending requests.
+- **Settings**: Profile management and security settings.
 
 ## 🚀 Tech Stack
 
-- **Framework:** [Next.js 16.0.7](https://nextjs.org/)
+- **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS + Shadcn/UI
-- **Icons:** Lucide Icons
-- **Form Validation:** Zod
-- **Data Fetching:** Axios + TanStack Query
+- **Styling:** Tailwind CSS v4, Shadcn/UI, Lucide Icons, React Icons
+- **State & Data:** TanStack Query v5, Axios
+- **Forms:** React Hook Form, Zod
+- **Authentication:** NextAuth.js
+- **Security:** Crypto-js for payload encryption
 - **Notifications:** Sonner Toast
-- **Linting & Commit Hooks:** ESLint, Husky, Commitlint, Lint-staged
-
----
-
----
 
 ## ⚙️ Setup & Installation
 
-# 1️⃣ Clone the repository
+### 1. Clone the repository
 
-git clone https://github.com/RashedulHaqueRasel1/Template-Overview-Website.git
+```bash
+git clone https://github.com/RashedulHaqueRasel1/edu_result.git
+cd edu_result
+```
 
-# 2️⃣ Navigate to the project
+### 2. Install dependencies
 
-cd Template-Overview-Website
-
-# 3️⃣ Install dependencies
-
+```bash
 npm install
+```
 
-# 4️⃣ Run development server
+### 3. Configure Environment Variables
 
+Create a `.env.local` file in the root directory and add the following:
+
+```env
+# API Configuration
+NEXT_PUBLIC_API_URL=https://your-api-url.com/api/v1
+NEXT_PUBLIC_SOCKET_URL=https://your-socket-url.com
+
+# Authentication
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_super_secret_key
+```
+
+### 4. Run Development Server
+
+```bash
 npm run dev
+```
 
-Then open http://localhost:3000 in your browser.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-🧩 Features
-✨ Modern UI built with Tailwind + Shadcn
+## 📂 Project Structure
 
-🔐 Authentication with NextAuth.js
+```bash
+src/
+├── app/              # Next.js App Router pages and API routes
+├── components/       # Reusable UI components (Shadcn, Custom)
+├── hooks/            # Custom React hooks
+├── lib/              # Utility functions, API clients, schema definitions
+├── types/            # TypeScript type definitions
+└── providers/        # Context providers (QueryClient, Auth)
+```
 
-⚡ API integration with Axios
+## 🤝 Contributing
 
-🔍 Data fetching & caching using TanStack Query
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-🧠 Strong validation using Zod
+## 🧑‍💻 Author
 
-💬 Beautiful toasts with Sonner
+**Rashedul Haque Rasel**
 
-🧰 Modular, scalable folder structure
+📧 Email: [rashedulhaquerasel1@gmail.com](mailto:rashedulhaquerasel1@gmail.com)
 
-🔒 Husky pre-commit hook + Commitlint setup
+🌐 Portfolio: [https://rashedul-haque-rasel.vercel.app](https://rashedul-haque-rasel.vercel.app)
 
-📦 Scripts
-Command Description
-npm run dev Start development server
-npm run build Create production build
-npm run start Run production build
-npm run lint Run ESLint
-npm run format Prettify code (if configured)
-
-🧪 Husky Setup (Pre-commit)
-This project uses Husky and Lint-staged to enforce clean commits.
-
-# Add a new hook
-
-npx husky add .husky/pre-commit "npm run lint"
-git add .husky/pre-commit
-
---
-
-🧑‍💻 Author
-
-Rashedul Haque Rasel
-
-Built with ❤️ using Next.js, TypeScript, and Tailwind CSS.
-
-📧 [rashedulhaquerasel1@gmail.com](rashedulhaquerasel1@gmail.com) 
-🌐 [Protfolio](https://rashedul-haque-rasel.vercel.app)
+💼 LinkedIn: [https://www.linkedin.com/in/rashedul-haque-rasel](https://www.linkedin.com/in/rashedul-haque-rasel)

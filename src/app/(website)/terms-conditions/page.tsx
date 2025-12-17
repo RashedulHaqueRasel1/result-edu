@@ -1,10 +1,9 @@
-import TermsConditions from "@/components/website/PageSections/TermsConditions/TermsConditions";
 import React from "react";
 
 export default function page() {
   return (
     <div>
-      <TermsConditions />
+      <h1>This is Terms & Conditions Page</h1>
     </div>
   );
 }
