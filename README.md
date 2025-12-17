@@ -12,14 +12,6 @@ A comprehensive Education Result Portal built with **Next.js 16**, designed to p
 - **Privacy Focused**: Sensitive parameters are hidden using secure API proxy routes.
 - **Detailed Result View**: Displays student info, subject-wise grades, and overall GPA with a print-friendly interface.
 
-### 🛡️ Admin Dashboard
-
-- **Overview Analytics**: Visualizes platform growth, user activity, and pending moderation tasks using charts.
-- **User Management**: Full CRUD operations for platform users with role-based access control.
-- **Alumni Management**: Database for managing alumni records.
-- **Moderation Queue**: Efficient workflow for reviewing and approving pending requests.
-- **Settings**: Profile management and security settings.
-
 ## 🚀 Tech Stack
 
 - **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
@@ -37,6 +29,7 @@ A comprehensive Education Result Portal built with **Next.js 16**, designed to p
 
 ```bash
 git clone https://github.com/RashedulHaqueRasel1/edu_result.git
+
 cd edu_result
 ```
 

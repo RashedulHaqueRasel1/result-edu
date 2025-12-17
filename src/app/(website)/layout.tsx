@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "Services Services",
+  title: "Education Result Portal",
   description:
-    "Elite craftsmanship in custom stone, tile, and masonry for homes & businesses across the Valley.",
+    "A comprehensive Education Result Portal, designed to provide secure result searching and robust administrative management.",
 };
 
 export default function RootLayout({
