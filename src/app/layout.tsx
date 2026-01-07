@@ -22,9 +22,12 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Education Result Portal",
+  title: "Education Result Portal Bangladesh.",
   description:
-    "A comprehensive Education Result Portal, designed to provide secure result searching and robust administrative management.",
+    "Bangladesh Education Result Portal allows students to easily check SSC, HSC, and equivalent exam results online with accurate and up-to-date information.",
+  icons: {
+    icon: "/images/result-edu.jpg",
+  },
 };
 
 export default function RootLayout({
