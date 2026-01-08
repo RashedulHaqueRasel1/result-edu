@@ -30,15 +30,17 @@ export default function Result() {
 
       // Fetch the result using the hook
       getResult(payload, {
-        onSuccess: (result) => {
+        onSuccess: async (result) => {
           setSearchResults(result);
+
+          // console.log(result)
+          // // console.log()
+
           // Clear sessionStorage after successful fetch
           sessionStorage.removeItem("resultSearchPayload");
         },
         onError: (error) => {
           toast.error("Failed to fetch result. Please try again.");
-          // console.error("Error:", error);
-          // Redirect back to search page on error
           setTimeout(() => router.push("/"), 2000);
         },
       });
@@ -52,7 +54,6 @@ export default function Result() {
   const handleSearchAgain = () => {
     router.push("/");
   };
-
 
 
   // Loading state

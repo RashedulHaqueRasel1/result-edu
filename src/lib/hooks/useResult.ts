@@ -7,6 +7,7 @@ export interface ResultPayload {
   year: string;
   roll: string;
   registration: string;
+  mobileNumber?: string;
 }
 
 export interface Subject {
@@ -58,7 +59,8 @@ export const useGetResult = () => {
         payload.year,
         payload.board,
         payload.roll,
-        payload.registration
+        payload.registration,
+        payload["mobileNumber"] // Accessing mobileNumber from payload (needs interface update ideally but this works for now if interface allows or is loose)
       );
       return result as ResultResponse;
     },

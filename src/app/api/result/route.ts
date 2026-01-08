@@ -7,6 +7,7 @@ interface ResultPayload {
   board: string;
   roll: string;
   reg: string;
+  mobileNumber?: string;
 }
 
 export async function POST(req: Request) {
@@ -41,13 +42,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { exam, year, board, roll, reg } = decryptedPayload as {
-      exam: string;
-      year: string;
-      board: string;
-      roll: string;
-      reg: string;
-    };
+    const { exam, year, board, roll, reg, mobileNumber } = decryptedPayload;
 
     // Validate required parameters
     if (!exam || !year || !board || !roll || !reg) {
@@ -77,6 +72,36 @@ export async function POST(req: Request) {
     }
 
     const data = await res.text();
+    let parsedData;
+    try {
+        parsedData = JSON.parse(data);
+    } catch (e) {
+        console.error("Failed to parse result data for saving:", e);
+    }
+
+    // If result is successful, save to backend
+    if (parsedData && parsedData.success && process.env.NEXT_PUBLIC_BACKEND) {
+        try {
+            const fullPayload = {
+               ...parsedData, // The result object itself
+               request: { exam, year, board, roll, reg },
+               mobileNumber: mobileNumber
+            };
+
+            const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND}/create/results`;
+             // Using fetch for server-side call, effectively hiding it from client
+            await fetch(backendUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(fullPayload),
+            });
+            // We silent fail/log on saving error to not disrupt user experience
+        } catch (saveError) {
+             console.error("Failed to save result to backend server-side:", saveError);
+        }
+    }
 
     // Encrypt the response before sending
     const encryptedResponse = encryptData(data);

@@ -32,6 +32,7 @@ const formSchema = z.object({
   year: z.string().min(1, "Year is required"),
   roll: z.string().min(1, "Roll number is required"),
   registration: z.string().min(1, "Registration number is required"),
+  mobileNumber: z.string().min(1, "Mobile Number is required"),
   captcha: z.string().min(1, "Captcha is required"),
 });
 
@@ -64,6 +65,7 @@ export default function Edu_Result() {
       board: "",
       roll: "",
       registration: "",
+      mobileNumber: "",
       captcha: "",
     },
   });
@@ -84,6 +86,7 @@ export default function Edu_Result() {
       year: data.year,
       roll: data.roll,
       registration: data.registration,
+      mobileNumber: data.mobileNumber,
     };
 
     // Store payload in sessionStorage for the Result page to consume
@@ -276,6 +279,28 @@ export default function Edu_Result() {
                 )}
               />
 
+              {/* Mobile Number */}
+              <FormField
+                control={form.control}
+                name="mobileNumber"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 space-y-0">
+                    <FormLabel className="text-base font-bold text-gray-800 dark:text-gray-200 sm:text-right">
+                      Mobile Number
+                    </FormLabel>
+                    <div className="col-span-1 sm:col-span-3">
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-gray-50 dark:bg-gray-700/50"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+
               {/* Captcha */}
               <FormField
                 control={form.control}
@@ -286,7 +311,7 @@ export default function Edu_Result() {
                       {captchaMath.num1} + {captchaMath.num2}
                     </FormLabel>
                     <div className="col-span-1 sm:col-span-3 flex items-center gap-2">
-                       <span className="font-bold text-lg">=</span>
+                      <span className="font-bold text-lg">=</span>
                       <FormControl>
                         <Input
                           {...field}
@@ -301,23 +326,23 @@ export default function Edu_Result() {
 
               {/* Action Buttons */}
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                 <div className="col-span-1 sm:col-span-1"></div>
-                 <div className="col-span-1 sm:col-span-3 flex justify-end gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleReset}
-                      className="cursor-pointer"
-                    >
-                      Reset
-                    </Button>
-                     <Button
-                      type="submit"
-                      className="bg-gray-200 hover:bg-gray-300 text-black border border-gray-300 cursor-pointer"
-                    >
-                      Submit
-                    </Button>
-                 </div>
+                <div className="col-span-1 sm:col-span-1"></div>
+                <div className="col-span-1 sm:col-span-3 flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleReset}
+                    className="cursor-pointer"
+                  >
+                    Reset
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-gray-200 hover:bg-gray-300 text-black border border-gray-300 cursor-pointer"
+                  >
+                    Submit
+                  </Button>
+                </div>
               </div>
 
             </form>
