@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { GraduationCap, RefreshCw, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { useGetResult, ResultResponse } from "@/lib/hooks/useResult";
 
+
 export default function Result() {
   const router = useRouter();
+  const resultRef = useRef<HTMLDivElement>(null);
   const [searchResults, setSearchResults] = useState<ResultResponse | null>(
     null
   );
@@ -36,7 +37,7 @@ export default function Result() {
         },
         onError: (error) => {
           toast.error("Failed to fetch result. Please try again.");
-          console.error("Error:", error);
+          // console.error("Error:", error);
           // Redirect back to search page on error
           setTimeout(() => router.push("/"), 2000);
         },
@@ -47,18 +48,21 @@ export default function Result() {
     }
   }, [getResult, router]);
 
+  // this is for search again button
   const handleSearchAgain = () => {
     router.push("/");
   };
 
+
+
   // Loading state
   if (isPending) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-emerald-950 dark:to-teal-950 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#ffffff] flex items-center justify-center p-4">
         <div className="text-center">
-          <RefreshCw className="w-12 h-12 sm:w-16 sm:h-16 animate-spin text-green-600 dark:text-green-400 mx-auto mb-4" />
-          <p className="text-lg sm:text-xl font-semibold text-muted-foreground">
-            Loading your results...
+          <RefreshCw className="w-12 h-12 animate-spin text-[#6b7280] mx-auto mb-4" />
+          <p className="text-xl font-semibold text-[#374151]">
+            Searching Result...
           </p>
         </div>
       </div>
@@ -67,194 +71,147 @@ export default function Result() {
 
   // No results or error state
   if (!searchResults) {
-    return null; // Will redirect to homepage
+    return null;
   }
 
+  // Helper to safely get student info
+  const info = searchResults.studentInfo;
+
+  // Extract year from exam name if possible, or default
+  const examYear = searchResults.exam.match(/\d{4}/)?.[0] || new Date().getFullYear();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-emerald-950 dark:to-teal-950 py-6 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Back Button */}
-        <Button
-          onClick={handleSearchAgain}
-          variant="outline"
-          className="w-full sm:w-auto mb-4 sm:mb-6 hover:bg-muted transition-all cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Search Again
-        </Button>
+    <div className="min-h-screen bg-[#ffffff] p-2 sm:p-4 font-sans text-[13px] md:text-[15px] leading-tight text-[#000000] flex flex-col items-center">
+      <div ref={resultRef} className="w-full max-w-[800px] shadow-none sm:p-4 bg-[#ffffff]">
 
-        {/* Results Display */}
-        {searchResults.success && (
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/20 p-4 sm:p-6 lg:p-8 animate-fade-in">
-            {/* Header */}
-            <div className="text-center mb-6 sm:mb-8">
-              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 mb-3 sm:mb-4 shadow-lg">
-                <GraduationCap className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent mb-2 px-4">
-                {searchResults.summary.Result}
-              </h2>
-              <p className="text-muted-foreground text-sm sm:text-base px-4">
-                {searchResults.exam}
-              </p>
-            </div>
+        {/* Official Header */}
+        <div className="w-full bg-[#00782A] text-[#ffffff] py-3 sm:py-5 px-2 mb-6 text-center">
+          <h1 className="text-sm sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2 uppercase">
+            Web Based Result Publication System for Education Board
+          </h1>
+          <p className="text-[10px] sm:text-sm md:text-lg font-medium uppercase">
+            JSC/JDC/SSC/DAKHIL/HSC/ALIM and Equivalent Examination
+          </p>
+        </div>
 
-            {/* GPA Summary Card */}
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-xl p-4 sm:p-6 border-2 border-green-300 dark:border-green-800 mb-6 sm:mb-8">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="text-center sm:text-left">
-                  <p className="text-sm text-muted-foreground mb-1">GPA</p>
-                  <p className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400">
-                    {searchResults.summary.GPA}
-                  </p>
-                </div>
-                <div className="text-center sm:text-right">
-                  <p className="text-sm text-muted-foreground mb-1">Result</p>
-                  <p className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
-                    {searchResults.summary.Result}
-                  </p>
-                </div>
-              </div>
-            </div>
+        {/* Exam Title Header */}
+        <h2 className="text-center text-lg md:text-xl font-bold mb-4 text-[#000000]">
+          SSC/Dakhil/Equivalent Result {examYear}
+        </h2>
 
-            {/* Student Information */}
-            <div className="mb-6 sm:mb-8">
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 px-1">
-                Student Information
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">Name</p>
-                  <p className="text-lg font-bold">
-                    {searchResults.studentInfo.Name}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Father&apos;s Name
-                  </p>
-                  <p className="text-base font-semibold">
-                    {searchResults.studentInfo["Fathers Name"]}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Mother&apos;s Name
-                  </p>
-                  <p className="text-base font-semibold">
-                    {searchResults.studentInfo["Mothers Name"]}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Institute
-                  </p>
-                  <p className="text-base font-semibold">
-                    {searchResults.studentInfo.Institute}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">Board</p>
-                  <p className="text-base font-semibold">
-                    {searchResults.studentInfo.Board}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">Roll</p>
-                  <p className="text-base font-semibold font-mono">
-                    {searchResults.studentInfo["Roll No"]}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Registration
-                  </p>
-                  <p className="text-base font-semibold font-mono">
-                    {searchResults.studentInfo["Reg No"] || "N/A"}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">Group</p>
-                  <p className="text-base font-semibold">
-                    {searchResults.studentInfo.Group}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">Type</p>
-                  <p className="text-base font-semibold">
-                    {searchResults.studentInfo.Type}
-                  </p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Date of Birth
-                  </p>
-                  <p className="text-base font-semibold">
-                    {searchResults.studentInfo["Date of Birth"]}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Subjects Table */}
-            <div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 px-1">
-                Subject-wise Results
-              </h3>
-              <div className="overflow-x-auto rounded-lg border border-green-200 dark:border-green-800 -mx-4 sm:mx-0">
-                <table className="w-full min-w-[400px]">
-                  <thead className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50">
-                    <tr>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold">
-                        Code
-                      </th>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold">
-                        Subject Name
-                      </th>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-semibold">
-                        Grade
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-green-100 dark:divide-green-800">
-                    {searchResults.subjects.map((subject, index) => (
-                      <tr
-                        key={subject.code}
-                        className={`${
-                          index % 2 === 0
-                            ? "bg-white dark:bg-gray-800"
-                            : "bg-green-50/50 dark:bg-green-950/20"
-                        } hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors`}
-                      >
-                        <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium">
-                          {subject.code}
-                        </td>
-                        <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
-                          {subject.name}
-                        </td>
-                        <td className="px-3 sm:px-4 py-2 sm:py-3 text-center">
-                          <span
-                            className={`inline-flex items-center justify-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold ${
-                              subject.grade === "A+"
-                                ? "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300"
-                                : subject.grade === "A"
-                                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
-                                  : subject.grade === "A-"
-                                    ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300"
-                                    : "bg-gray-100 text-gray-700 dark:bg-gray-900/50 dark:text-gray-300"
-                            }`}
-                          >
-                            {subject.grade}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+        {/* Student Information Table */}
+        <div className="w-full border-t border-l border-[#ffffff] shadow-[0_0_2px_#808080] bg-[#EEEEEE]">
+          <div className="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr_130px_1fr] border-b border-[#ffffff]">
+            {/* Row 1 */}
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Roll No</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000]">{info["Roll No"]}</div>
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000] hidden md:block">Name</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000] hidden md:block">{info.Name}</div>
           </div>
-        )}
+
+          <div className="md:hidden grid grid-cols-[100px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Name</div>
+            <div className="p-2 bg-[#ffffff] font-normal text-[#000000]">{info.Name}</div>
+          </div>
+
+          <div className="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr_130px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Board</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000]">{info.Board}</div>
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000] hidden md:block">Father&apos;s Name</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000] hidden md:block">{info["Fathers Name"]}</div>
+          </div>
+          <div className="md:hidden grid grid-cols-[100px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Father&apos;s Name</div>
+            <div className="p-2 bg-[#ffffff] font-normal text-[#000000]">{info["Fathers Name"]}</div>
+          </div>
+
+          <div className="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr_130px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Group</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000]">{info.Group}</div>
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000] hidden md:block">Mother&apos;s Name</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000] hidden md:block">{info["Mothers Name"]}</div>
+          </div>
+          <div className="md:hidden grid grid-cols-[100px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Mother&apos;s Name</div>
+            <div className="p-2 bg-[#ffffff] font-normal text-[#000000]">{info["Mothers Name"]}</div>
+          </div>
+
+          <div className="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr_130px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Type</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000]">{info.Type}</div>
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000] hidden md:block">Date of Birth</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000] hidden md:block">{info["Date of Birth"] || "Hidden"}</div>
+          </div>
+          <div className="md:hidden grid grid-cols-[100px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Date of Birth</div>
+            <div className="p-2 bg-[#ffffff] font-normal text-[#000000]">{info["Date of Birth"] || "Hidden"}</div>
+          </div>
+
+          <div className="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr_130px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Result</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-bold text-[#000000]">{searchResults.summary.Result}</div>
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000] hidden md:block">Institute</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000] hidden md:block row-span-2">{info.Institute}</div>
+          </div>
+          <div className="md:hidden grid grid-cols-[100px_1fr] border-b border-[#ffffff]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">Institute</div>
+            <div className="p-2 bg-[#ffffff] font-normal text-[#000000]">{info.Institute}</div>
+          </div>
+
+          <div className="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr_130px_1fr] border-b border-[#ffffff] bg-[#EEEEEE]">
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000]">GPA</div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-bold text-[#000000]">{searchResults.summary.GPA}</div>
+            <div className="p-2 border-r border-[#ffffff] font-normal text-[#000000] hidden md:block"></div>
+            <div className="p-2 border-r border-[#ffffff] bg-[#ffffff] font-normal text-[#000000] hidden md:block"></div>
+          </div>
+        </div>
+
+
+        {/* Grade Sheet Header */}
+        <h2 className="text-center text-lg md:text-xl font-bold mt-6 mb-4 text-[#000000]">
+          Grade Sheet
+        </h2>
+
+        {/* Grade Sheet Table */}
+        <div className="w-full">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-[#B0C4DE] text-[#000000]">
+                <th className="border border-[#ffffff] p-2 text-left font-bold w-[100px]">Code</th>
+                <th className="border border-[#ffffff] p-2 text-left font-bold">Subject</th>
+                <th className="border border-[#ffffff] p-2 text-left font-bold w-[100px]">Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {searchResults.subjects.map((subject) => (
+                <tr key={subject.code} className="bg-[#EEEEEE] odd:bg-[#EEEEEE] even:bg-[rgb(226,231,235)]">
+                  <td className="border border-[#ffffff] p-2 text-[#000000]">{subject.code}</td>
+                  <td className="border border-[#ffffff] p-2 text-[#000000]">{subject.name}</td>
+                  <td className="border border-[#ffffff] p-2 text-[#000000]">{subject.grade}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="text-center mt-6 mb-8 flex justify-center gap-4">
+          {/* Footer Link */}
+          <div className="">
+            <button
+              onClick={handleSearchAgain}
+              className="text-[#1d4ed8] hover:underline font-bold text-sm cursor-pointer"
+              data-html2canvas-ignore="true"
+            >
+              Search Again
+            </button>
+          </div>
+
+        </div>
+
+        {/* Bottom Green line */}
+        <div className="w-full h-2 bg-[#77B55A] mb-8"></div>
+
+        <div className="text-center py-2">© {new Date().getFullYear()} All rights reserved.</div>
       </div>
     </div>
   );

@@ -39,9 +39,17 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function Edu_Result() {
   const router = useRouter();
-  const [captchaValue] = useState(() =>
-    Math.floor(1000 + Math.random() * 9000).toString()
-  );
+  const [captchaMath, setCaptchaMath] = useState({ num1: 0, num2: 0, sum: 0 });
+
+  const generateCaptcha = () => {
+    const num1 = Math.floor(Math.random() * 9) + 1;
+    const num2 = Math.floor(Math.random() * 9) + 1;
+    setCaptchaMath({ num1, num2, sum: num1 + num2 });
+  };
+
+  React.useEffect(() => {
+    generateCaptcha();
+  }, []);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 30 }, (_, i) =>
@@ -51,9 +59,9 @@ export default function Edu_Result() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      board: "",
       exam: "",
       year: "",
+      board: "",
       roll: "",
       registration: "",
       captcha: "",
@@ -62,9 +70,10 @@ export default function Edu_Result() {
 
   const onSubmit = async (data: FormData) => {
     // Validate captcha
-    if (data.captcha !== captchaValue) {
-      toast.error("Invalid captcha. Please try again.");
+    if (parseInt(data.captcha) !== captchaMath.sum) {
+      toast.error("Invalid calculation. Please try again.");
       form.setValue("captcha", "");
+      generateCaptcha();
       return;
     }
 
@@ -81,18 +90,19 @@ export default function Edu_Result() {
     sessionStorage.setItem("resultSearchPayload", JSON.stringify(payload));
 
     // Navigate to the Result page
-    toast.success("Redirecting to result page...");
+    // toast.success("Redirecting to result page...");
     router.push("/result");
   };
 
   const handleReset = () => {
     form.reset();
+    generateCaptcha(); // Reset captcha as well
     toast.info("Form has been reset");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-emerald-950 dark:to-teal-950 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12 animate-fade-in-down">
           <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 mb-3 sm:mb-4 shadow-lg">
@@ -107,92 +117,74 @@ export default function Edu_Result() {
         </div>
 
         {/* Search Form Card */}
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/20 p-4 sm:p-6 lg:p-8 mb-8 animate-fade-in-up">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/20 p-6 sm:p-10 lg:p-12 mb-8 animate-fade-in-up">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 sm:space-y-6"
+              className="space-y-6 max-w-2xl mx-auto"
             >
-              {/* Row 1: Board, Exam, Year */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="board"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-semibold">
-                        Board
-                      </FormLabel>
+              {/* Examination */}
+              <FormField
+                control={form.control}
+                name="exam"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 space-y-0">
+                    <FormLabel className="text-base font-bold text-gray-800 dark:text-gray-200 sm:text-right">
+                      Examination
+                    </FormLabel>
+                    <div className="col-span-1 sm:col-span-3">
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="w-full cursor-pointer">
-                            <SelectValue placeholder="Select Board" />
-                          </SelectTrigger>
-                        </FormControl>  
-                        <SelectContent>
-                          <SelectItem value="dinajpur">Dinajpur</SelectItem>
-                          <SelectItem value="dhaka">Dhaka</SelectItem>
-                          <SelectItem value="chittagong">Chittagong</SelectItem>
-                          <SelectItem value="rajshahi">Rajshahi</SelectItem>
-                          <SelectItem value="comilla">Comilla</SelectItem>
-                          <SelectItem value="jessore">Jessore</SelectItem>
-                          <SelectItem value="sylhet">Sylhet</SelectItem>
-                          <SelectItem value="barisal">Barisal</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="exam"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-semibold">
-                        Exam
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full cursor-pointer">
-                            <SelectValue placeholder="Select Exam" />
+                          <SelectTrigger className="w-full bg-gray-50 dark:bg-gray-700/50">
+                            <SelectValue placeholder="SSC/Dakhil/Equivalent" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="ssc">SSC</SelectItem>
-                          <SelectItem value="hsc">HSC</SelectItem>
-                          <SelectItem value="jsc">JSC</SelectItem>
-                          <SelectItem value="dakhil">Dakhil</SelectItem>
-                          <SelectItem value="alim">Alim</SelectItem>
+                          <SelectItem value="ssc">
+                            SSC/Dakhil/Equivalent
+                          </SelectItem>
+                          <SelectItem value="jsc">JSC/JDC</SelectItem>
+                          <SelectItem value="jsc">SSC(Vocational)</SelectItem>
+                          <SelectItem value="jsc">HSC/Alim</SelectItem>
+                          <SelectItem value="jsc">HSC(Vocational)</SelectItem>
+                          <SelectItem value="jsc">HSC(BM)</SelectItem>
+                          <SelectItem value="jsc">
+                            Diploma in Commerce
+                          </SelectItem>
+                          <SelectItem value="jsc">
+                            Diploma in Business Studies
+                          </SelectItem>
+                          <SelectItem value="hsc">
+                            HSC/Alim/Equivalent
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="year"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-semibold">
-                        Year
-                      </FormLabel>
+              {/* Year */}
+              <FormField
+                control={form.control}
+                name="year"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 space-y-0">
+                    <FormLabel className="text-base font-bold text-gray-800 dark:text-gray-200 sm:text-right">
+                      Year
+                    </FormLabel>
+                    <div className="col-span-1 sm:col-span-3">
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="w-full cursor-pointer">
-                            <SelectValue placeholder="Select Year" />
+                          <SelectTrigger className="w-full bg-gray-50 dark:bg-gray-700/50">
+                            <SelectValue placeholder="Select One" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -204,105 +196,136 @@ export default function Edu_Result() {
                         </SelectContent>
                       </Select>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-              {/* Row 2: Roll, Registration */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="roll"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-semibold">
-                        Roll Number
-                      </FormLabel>
+              {/* Board */}
+              <FormField
+                control={form.control}
+                name="board"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 space-y-0">
+                    <FormLabel className="text-base font-bold text-gray-800 dark:text-gray-200 sm:text-right">
+                      Board
+                    </FormLabel>
+                    <div className="col-span-1 sm:col-span-3">
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full bg-gray-50 dark:bg-gray-700/50">
+                            <SelectValue placeholder="Select One" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="dhaka">Dhaka</SelectItem>
+                          <SelectItem value="rajshahi">Rajshahi</SelectItem>
+                          <SelectItem value="comilla">Comilla</SelectItem>
+                          <SelectItem value="jessore">Jessore</SelectItem>
+                          <SelectItem value="chittagong">Chittagong</SelectItem>
+                          <SelectItem value="barisal">Barisal</SelectItem>
+                          <SelectItem value="sylhet">Sylhet</SelectItem>
+                          <SelectItem value="dinajpur">Dinajpur</SelectItem>
+                          <SelectItem value="madrasah">Madrasah</SelectItem>
+                          <SelectItem value="tec">Technical</SelectItem>
+                          <SelectItem value="tec">DIBS(Dhaka)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+
+              {/* Roll */}
+              <FormField
+                control={form.control}
+                name="roll"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 space-y-0">
+                    <FormLabel className="text-base font-bold text-gray-800 dark:text-gray-200 sm:text-right">
+                      Roll
+                    </FormLabel>
+                    <div className="col-span-1 sm:col-span-3">
                       <FormControl>
                         <Input
-                          placeholder="e.g., 438173"
                           {...field}
-                          className="transition-all duration-200 focus:scale-[1.02]"
+                          className="bg-gray-50 dark:bg-gray-700/50"
                         />
                       </FormControl>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="registration"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-semibold">
-                        Registration Number
-                      </FormLabel>
+              {/* Reg: No */}
+              <FormField
+                control={form.control}
+                name="registration"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 space-y-0">
+                    <FormLabel className="text-base font-bold text-gray-800 dark:text-gray-200 sm:text-right">
+                      Reg: No
+                    </FormLabel>
+                    <div className="col-span-1 sm:col-span-3">
                       <FormControl>
                         <Input
-                          placeholder="e.g., 4362836283"
                           {...field}
-                          className="transition-all duration-200 focus:scale-[1.02]"
+                          className="bg-gray-50 dark:bg-gray-700/50"
                         />
                       </FormControl>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
               {/* Captcha */}
-              <div className="grid grid-cols-1 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="captcha"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-semibold">
-                        Enter Captcha Code
-                      </FormLabel>
+              <FormField
+                control={form.control}
+                name="captcha"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 space-y-0">
+                    <FormLabel className="text-base font-bold text-gray-800 dark:text-gray-200 sm:text-right">
+                      {captchaMath.num1} + {captchaMath.num2}
+                    </FormLabel>
+                    <div className="col-span-1 sm:col-span-3 flex items-center gap-2">
+                      {/* <span className="font-bold text-lg">=</span>   */}
                       <FormControl>
                         <Input
-                          placeholder="Enter the code shown"
                           {...field}
-                          className="transition-all duration-200 focus:scale-[1.02]"
+                          className="bg-gray-50 dark:bg-gray-700/50"
                         />
                       </FormControl>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex items-center justify-center">
-                  <div className="w-full max-w-xs bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-lg p-4 sm:p-6 border-2 border-dashed border-green-300 dark:border-green-700">
-                    <p className="text-2xl sm:text-3xl font-bold text-center font-mono tracking-widest text-green-700 dark:text-green-300">
-                      {captchaValue}
-                    </p>
-                  </div>
-                </div>
-              </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4 ">
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full sm:flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] h-12 sm:h-auto py-3 cursor-pointer"
-                >
-                  <Search className="w-5 h-5 mr-2" />
-                  Search Result
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  onClick={handleReset}
-                  className="w-full sm:w-auto sm:flex-initial border-2 hover:bg-muted transition-all duration-300 h-12 sm:h-auto cursor-pointer"
-                >
-                  Reset Form
-                </Button>
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div className="col-span-1 sm:col-span-1"></div>
+                <div className="col-span-1 sm:col-span-3 flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleReset}
+                    className="cursor-pointer hover:bg-green-200 hover:border-green-200"
+                  >
+                    Reset
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-gray-200   text-black border border-gray-300 hover:bg-green-200 hover:border-green-200 cursor-pointer "
+                  >
+                    Submit
+                  </Button>
+                </div>
               </div>
             </form>
           </Form>
