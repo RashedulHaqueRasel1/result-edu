@@ -146,15 +146,23 @@ export default function Edu_Result() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="ssc">SSC/Dakhil/Equivalent</SelectItem>
+                          <SelectItem value="ssc">
+                            SSC/Dakhil/Equivalent
+                          </SelectItem>
                           <SelectItem value="jsc">JSC/JDC</SelectItem>
                           <SelectItem value="jsc">SSC(Vocational)</SelectItem>
                           <SelectItem value="jsc">HSC/Alim</SelectItem>
                           <SelectItem value="jsc">HSC(Vocational)</SelectItem>
                           <SelectItem value="jsc">HSC(BM)</SelectItem>
-                          <SelectItem value="jsc">Diploma in Commerce</SelectItem>
-                          <SelectItem value="jsc">Diploma in Business Studies</SelectItem>
-                          <SelectItem value="hsc">HSC/Alim/Equivalent</SelectItem>
+                          <SelectItem value="jsc">
+                            Diploma in Commerce
+                          </SelectItem>
+                          <SelectItem value="jsc">
+                            Diploma in Business Studies
+                          </SelectItem>
+                          <SelectItem value="hsc">
+                            HSC/Alim/Equivalent
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -311,7 +319,11 @@ export default function Edu_Result() {
                       {captchaMath.num1} + {captchaMath.num2}
                     </FormLabel>
                     <div className="col-span-1 sm:col-span-3 flex items-center gap-2">
+<<<<<<< HEAD
                       <span className="font-bold text-lg">=</span>
+=======
+                      {/* <span className="font-bold text-lg">=</span>   */}
+>>>>>>> 12faa21363fd8ecd7edf5ccbf9a43f6a35c74597
                       <FormControl>
                         <Input
                           {...field}
@@ -332,19 +344,26 @@ export default function Edu_Result() {
                     type="button"
                     variant="outline"
                     onClick={handleReset}
+<<<<<<< HEAD
                     className="cursor-pointer"
+=======
+                    className="cursor-pointer hover:bg-green-200 hover:border-green-200"
+>>>>>>> 12faa21363fd8ecd7edf5ccbf9a43f6a35c74597
                   >
                     Reset
                   </Button>
                   <Button
                     type="submit"
+<<<<<<< HEAD
                     className="bg-gray-200 hover:bg-gray-300 text-black border border-gray-300 cursor-pointer"
+=======
+                    className="bg-gray-200   text-black border border-gray-300 hover:bg-green-200 hover:border-green-200 cursor-pointer "
+>>>>>>> 12faa21363fd8ecd7edf5ccbf9a43f6a35c74597
                   >
                     Submit
                   </Button>
                 </div>
               </div>
-
             </form>
           </Form>
         </div>
