@@ -32,14 +32,10 @@ const formSchema = z.object({
   year: z.string().min(1, "Year is required"),
   roll: z.string().min(1, "Roll number is required"),
   registration: z.string().min(1, "Registration number is required"),
-<<<<<<< HEAD
   mobileNumber: z
     .string()
     .min(11, "Mobile number must be at least 11 digits")
     .regex(/^\d+$/, "Mobile number must containing only digits"),
-=======
-  mobileNumber: z.string().min(1, "Mobile Number is required"),
->>>>>>> 98ba7f090ea56d30d7dedfb6b80f863e569753a6
   captcha: z.string().min(1, "Captcha is required"),
 });
 
@@ -307,11 +303,8 @@ export default function Edu_Result() {
                       <FormControl>
                         <Input
                           {...field}
-<<<<<<< HEAD
                           type="tel"
                           placeholder="01XXXXXXXXX"
-=======
->>>>>>> 98ba7f090ea56d30d7dedfb6b80f863e569753a6
                           className="bg-gray-50 dark:bg-gray-700/50"
                         />
                       </FormControl>
@@ -331,11 +324,7 @@ export default function Edu_Result() {
                       {captchaMath.num1} + {captchaMath.num2}
                     </FormLabel>
                     <div className="col-span-1 sm:col-span-3 flex items-center gap-2">
-<<<<<<< HEAD
                       <span className="font-bold text-lg">=</span>
-=======
-                      {/* <span className="font-bold text-lg">=</span>   */}
->>>>>>> 12faa21363fd8ecd7edf5ccbf9a43f6a35c74597
                       <FormControl>
                         <Input
                           {...field}
@@ -356,21 +345,13 @@ export default function Edu_Result() {
                     type="button"
                     variant="outline"
                     onClick={handleReset}
-<<<<<<< HEAD
                     className="cursor-pointer"
-=======
-                    className="cursor-pointer hover:bg-green-200 hover:border-green-200"
->>>>>>> 12faa21363fd8ecd7edf5ccbf9a43f6a35c74597
                   >
                     Reset
                   </Button>
                   <Button
                     type="submit"
-<<<<<<< HEAD
                     className="bg-gray-200 hover:bg-gray-300 text-black border border-gray-300 cursor-pointer"
-=======
-                    className="bg-gray-200   text-black border border-gray-300 hover:bg-green-200 hover:border-green-200 cursor-pointer "
->>>>>>> 12faa21363fd8ecd7edf5ccbf9a43f6a35c74597
                   >
                     Submit
                   </Button>
