@@ -147,19 +147,19 @@ export default function Edu_Result() {
                             SSC/Dakhil/Equivalent
                           </SelectItem>
                           <SelectItem value="jsc">JSC/JDC</SelectItem>
-                          <SelectItem value="jsc">SSC(Vocational)</SelectItem>
-                          <SelectItem value="jsc">HSC/Alim</SelectItem>
-                          <SelectItem value="jsc">HSC(Vocational)</SelectItem>
-                          <SelectItem value="jsc">HSC(BM)</SelectItem>
-                          <SelectItem value="jsc">
+                          <SelectItem value="hsc">HSC/Alim</SelectItem>
+                          {/* <SelectItem value="ssc vocational">SSC(Vocational)</SelectItem> */}
+                          {/* <SelectItem value="jsc">HSC(Vocational)</SelectItem> */}
+                          {/* <SelectItem value="jsc">HSC(BM)</SelectItem> */}
+                          {/* <SelectItem value="jsc">
                             Diploma in Commerce
-                          </SelectItem>
-                          <SelectItem value="jsc">
+                          </SelectItem> */}
+                          {/* <SelectItem value="jsc">
                             Diploma in Business Studies
-                          </SelectItem>
-                          <SelectItem value="hsc">
+                          </SelectItem> */}
+                          {/* <SelectItem value="hsc">
                             HSC/Alim/Equivalent
-                          </SelectItem>
+                          </SelectItem> */}
                         </SelectContent>
                       </Select>
                       <FormMessage />
