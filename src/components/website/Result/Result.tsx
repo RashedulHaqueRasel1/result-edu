@@ -32,8 +32,12 @@ export default function Result() {
 
       // Fetch the result using the hook
       getResult(payload, {
-        onSuccess: (result) => {
+        onSuccess: async (result) => {
           setSearchResults(result);
+
+          // console.log(result)
+          // // console.log()
+
           // Clear sessionStorage after successful fetch
           sessionStorage.removeItem("resultSearchPayload");
 
@@ -88,7 +92,6 @@ export default function Result() {
   const handleSearchAgain = () => {
     router.push("/");
   };
-
 
 
   // Loading state
