@@ -324,7 +324,7 @@ export default function Edu_Result() {
                       {captchaMath.num1} + {captchaMath.num2}
                     </FormLabel>
                     <div className="col-span-1 sm:col-span-3 flex items-center gap-2">
-                      <span className="font-bold text-lg">=</span>
+                      {/* <span className="font-bold text-lg">=</span> */}
                       <FormControl>
                         <Input
                           {...field}
