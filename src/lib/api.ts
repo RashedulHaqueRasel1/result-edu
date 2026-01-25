@@ -6,7 +6,8 @@ export async function getResultByRollAndRegistration(
   year: string,
   board: string,
   roll: string,
-  reg: string
+  reg: string,
+  mobileNumber?: string // Optional mobile number
 ) {
   try {
     // Prepare the payload
@@ -16,6 +17,7 @@ export async function getResultByRollAndRegistration(
       board,
       roll,
       reg,
+      mobileNumber,
     };
 
     // Encrypt the payload
