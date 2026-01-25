@@ -30,6 +30,8 @@ export const metadata: Metadata = {
   },
 };
 
+import InitialLoader from "@/components/common/InitialLoader";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -41,7 +43,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased`}
       >
         <MainProviders>
-          <Provider> {children} </Provider>
+          <Provider>
+            <InitialLoader>{children}</InitialLoader>
+          </Provider>
         </MainProviders>
         <Toaster position="top-right" closeButton />
       </body>

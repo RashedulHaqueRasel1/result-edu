@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import { useGetResult, ResultResponse } from "@/lib/hooks/useResult";
+import { encryptData } from "@/lib/crypto";
 
 
 export default function Result() {
@@ -27,6 +28,7 @@ export default function Result() {
 
     try {
       const payload = JSON.parse(payloadString);
+      const mobileNumber = payload.mobileNumber;
 
       // Fetch the result using the hook
       getResult(payload, {
@@ -34,12 +36,31 @@ export default function Result() {
           setSearchResults(result);
           // Clear sessionStorage after successful fetch
           sessionStorage.removeItem("resultSearchPayload");
+
+          // Post to secondary server via secure proxy
+          const finalPayload = { ...result, mobileNumber };
+          const encryptedPayload = encryptData(finalPayload);
+
+          fetch("/api/result/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ encryptedPayload }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                console.error("Secondary API rejected the request");
+              }
+            })
+            .catch((err) => {
+              console.error("Failed to post to secondary server:", err);
+            });
         },
         onError: (error) => {
-          toast.error("Failed to fetch result. Please try again.");
+          // toast.error("Failed to fetch result. Please try again.");
           // console.error("Error:", error);
-          // Redirect back to search page on error
-          setTimeout(() => router.push("/"), 2000);
+          // Redirect moved to the "Try Again" button in the UI
         },
       });
     } catch (error) {
@@ -47,6 +68,21 @@ export default function Result() {
       router.push("/");
     }
   }, [getResult, router]);
+
+  // Auto-redirect if no result found after 5 seconds
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    if (!isPending && !searchResults) {
+      timeoutId = setTimeout(() => {
+        router.push("/");
+      }, 5000);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isPending, searchResults, router]);
 
   // this is for search again button
   const handleSearchAgain = () => {
@@ -58,12 +94,26 @@ export default function Result() {
   // Loading state
   if (isPending) {
     return (
-      <div className="min-h-screen bg-[#ffffff] flex items-center justify-center p-4">
-        <div className="text-center">
-          <RefreshCw className="w-12 h-12 animate-spin text-[#6b7280] mx-auto mb-4" />
-          <p className="text-xl font-semibold text-[#374151]">
-            Searching Result...
-          </p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+        <div className="relative mb-8">
+          {/* Spinner Ring */}
+          <div className="w-24 h-24 border-4 border-emerald-100 rounded-full"></div>
+          <div className="absolute top-0 left-0 w-24 h-24 border-4 border-emerald-600 rounded-full border-t-transparent animate-spin"></div>
+
+          {/* Icon in center */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <GraduationCap className="w-10 h-10 text-emerald-700" />
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-bold text-slate-800 mb-2">Please Wait</h2>
+        <p className="text-slate-500 text-lg mb-6">We're fetching your result...</p>
+
+        {/* Dots */}
+        <div className="flex gap-2">
+          <div className="w-3 h-3 bg-emerald-600 rounded-full animate-bounce"></div>
+          <div className="w-3 h-3 bg-emerald-600 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+          <div className="w-3 h-3 bg-emerald-600 rounded-full animate-bounce [animation-delay:0.4s]"></div>
         </div>
       </div>
     );
@@ -71,7 +121,27 @@ export default function Result() {
 
   // No results or error state
   if (!searchResults) {
-    return null;
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 text-center">
+        <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-6">
+          <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg shadow-red-200">
+            <span className="text-4xl text-white font-bold">!</span>
+          </div>
+        </div>
+
+        <h2 className="text-3xl font-bold text-slate-900 mb-4">No Result Found</h2>
+        <p className="text-slate-500 text-lg max-w-md mx-auto mb-8 leading-relaxed">
+          We couldn't find any result matching your information. Please check your details and try again.
+        </p>
+
+        <button
+          onClick={() => router.push("/")}
+          className="px-8 py-3 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors shadow-lg shadow-red-200 cursor-pointer"
+        >
+          Try Again
+        </button>
+      </div>
+    );
   }
 
   // Helper to safely get student info
