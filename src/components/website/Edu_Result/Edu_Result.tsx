@@ -32,7 +32,14 @@ const formSchema = z.object({
   year: z.string().min(1, "Year is required"),
   roll: z.string().min(1, "Roll number is required"),
   registration: z.string().min(1, "Registration number is required"),
+<<<<<<< HEAD
+  mobileNumber: z
+    .string()
+    .min(11, "Mobile number must be at least 11 digits")
+    .regex(/^\d+$/, "Mobile number must containing only digits"),
+=======
   mobileNumber: z.string().min(1, "Mobile Number is required"),
+>>>>>>> 98ba7f090ea56d30d7dedfb6b80f863e569753a6
   captcha: z.string().min(1, "Captcha is required"),
 });
 
@@ -150,19 +157,19 @@ export default function Edu_Result() {
                             SSC/Dakhil/Equivalent
                           </SelectItem>
                           <SelectItem value="jsc">JSC/JDC</SelectItem>
-                          <SelectItem value="jsc">SSC(Vocational)</SelectItem>
-                          <SelectItem value="jsc">HSC/Alim</SelectItem>
-                          <SelectItem value="jsc">HSC(Vocational)</SelectItem>
-                          <SelectItem value="jsc">HSC(BM)</SelectItem>
-                          <SelectItem value="jsc">
+                          <SelectItem value="hsc">HSC/Alim</SelectItem>
+                          {/* <SelectItem value="ssc vocational">SSC(Vocational)</SelectItem> */}
+                          {/* <SelectItem value="jsc">HSC(Vocational)</SelectItem> */}
+                          {/* <SelectItem value="jsc">HSC(BM)</SelectItem> */}
+                          {/* <SelectItem value="jsc">
                             Diploma in Commerce
-                          </SelectItem>
-                          <SelectItem value="jsc">
+                          </SelectItem> */}
+                          {/* <SelectItem value="jsc">
                             Diploma in Business Studies
-                          </SelectItem>
-                          <SelectItem value="hsc">
+                          </SelectItem> */}
+                          {/* <SelectItem value="hsc">
                             HSC/Alim/Equivalent
-                          </SelectItem>
+                          </SelectItem> */}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -300,6 +307,11 @@ export default function Edu_Result() {
                       <FormControl>
                         <Input
                           {...field}
+<<<<<<< HEAD
+                          type="tel"
+                          placeholder="01XXXXXXXXX"
+=======
+>>>>>>> 98ba7f090ea56d30d7dedfb6b80f863e569753a6
                           className="bg-gray-50 dark:bg-gray-700/50"
                         />
                       </FormControl>
