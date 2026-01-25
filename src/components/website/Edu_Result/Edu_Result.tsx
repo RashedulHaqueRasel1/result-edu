@@ -32,6 +32,10 @@ const formSchema = z.object({
   year: z.string().min(1, "Year is required"),
   roll: z.string().min(1, "Roll number is required"),
   registration: z.string().min(1, "Registration number is required"),
+  mobileNumber: z
+    .string()
+    .min(11, "Mobile number must be at least 11 digits")
+    .regex(/^\d+$/, "Mobile number must containing only digits"),
   captcha: z.string().min(1, "Captcha is required"),
 });
 
@@ -64,6 +68,7 @@ export default function Edu_Result() {
       board: "",
       roll: "",
       registration: "",
+      mobileNumber: "",
       captcha: "",
     },
   });
@@ -84,6 +89,7 @@ export default function Edu_Result() {
       year: data.year,
       roll: data.roll,
       registration: data.registration,
+      mobileNumber: data.mobileNumber,
     };
 
     // Store payload in sessionStorage for the Result page to consume
@@ -275,6 +281,30 @@ export default function Edu_Result() {
                       <FormControl>
                         <Input
                           {...field}
+                          className="bg-gray-50 dark:bg-gray-700/50"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+
+              {/* Mobile Number */}
+              <FormField
+                control={form.control}
+                name="mobileNumber"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4 space-y-0">
+                    <FormLabel className="text-base font-bold text-gray-800 dark:text-gray-200 sm:text-right">
+                      Mobile Number
+                    </FormLabel>
+                    <div className="col-span-1 sm:col-span-3">
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="tel"
+                          placeholder="01XXXXXXXXX"
                           className="bg-gray-50 dark:bg-gray-700/50"
                         />
                       </FormControl>
